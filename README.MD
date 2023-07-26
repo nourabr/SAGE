@@ -28,10 +28,8 @@ O Core do projeto é composto por 4 módulos:
 
 # Requisitos funcionais (Deve ser possível)
 
-- [ ] Cadastrar, Editar, Apagar um usuários;
-- [ ] Logar no sistema;
-- [ ] Deslogar no sistema;
-- [ ] Cadastrar, Editar, Apagar todas as infos necessárias para o scrapping;
+- [ ] Scrapping: Capturar os conteúdos de um blog
+- [ ] Scrapping: Cadastrar, Editar, Apagar todas as infos necessárias para o scrapping;
 - [ ] Cadastrar todas as infos necessárias do WP;
 - [ ] Cadastrar, Editar, Apagar um concorrente;
 - [ ] Cadastrar, Editar, Apagar um blog;
@@ -42,6 +40,16 @@ O Core do projeto é composto por 4 módulos:
 - [ ] Ver itens que deram erro, identificar o problema e refazer;
 - [ ] Métricas: Posts, Anti plágio, Reescrita, Scrapping (D+1/7/30/Total);
 - [ ] Enviar notificações quando algo der errado;
+
+
+
+# Atualizações futuras
+
+- [ ] Logar no sistema com Refresh Token
+- [ ] Deslogar no sistema; Com Refresh Token
+- [ ] API Key
+- [ ] Cadastrar, Editar, Apagar um usuários;
+
 
 
 

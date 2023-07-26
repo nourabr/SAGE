@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  sage:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=sage
+      - POSTGRESQL_PASSWORD=sage
+      - POSTGRESQL_DATABASE=sage
