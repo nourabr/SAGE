@@ -5,11 +5,13 @@ import { Scrapper } from './scraping'
 ;(async () => {
   const scrapper = new Scrapper()
 
-  const competitor = await prisma.competitor.findFirst()
+  const competitors = await prisma.competitor.findMany()
 
-  if (!competitor) {
+  if (!competitors) {
     throw new Error('Competitors not found')
   }
 
-  scrapper.execute(competitor)
+  competitors.forEach((competitor) => {
+    scrapper.execute(competitor)
+  })
 })()
