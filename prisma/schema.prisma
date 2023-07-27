@@ -9,3 +9,77 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Post {
+  // Optional
+  id        Int      @id @default(autoincrement())
+  status    String   @default("on queue")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  error     String   @default("")
+
+  // Required after rewriting
+  title   String @default("")
+  url     String @default("")
+  content String @default("")
+
+  // Required
+  refTitle   String
+  refUrl     String @unique
+  refContent String
+
+  // Relations
+  blog         Blog       @relation(fields: [blogId], references: [id])
+  blogId       String
+  competitor   Competitor @relation(fields: [competitorId], references: [id])
+  competitorId String
+
+  @@map("posts")
+}
+
+model Blog {
+  // Optional
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Required
+  name String
+  url  String @unique
+
+  // Auth
+  user     String @default("")
+  password String @default("")
+  apiKey   String @default("")
+
+  // Relations
+  Post       Post[]
+  Competitor Competitor[]
+
+  @@map("blogs")
+}
+
+model Competitor {
+  // Optional
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Required 
+  name String @unique
+  url  String
+
+  // Scrapping variables
+  cardListUrl   String
+  postCardEl    String
+  postTitleEl   String
+  postContentEl String
+  scrapingLimit Int    @default(3)
+
+  // Relations
+  blog   Blog   @relation(fields: [blogId], references: [id])
+  blogId String
+  Post   Post[]
+
+  @@map("competitors")
+}

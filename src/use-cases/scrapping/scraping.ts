@@ -1,62 +1,116 @@
+import { prisma } from '@/lib/prisma'
+import { Competitor } from '@prisma/client'
+
 import puppeteer from 'puppeteer'
 
-// Infos necessárias para o scrapping
-const cardListUrl = 'https://guiadaeconomia.com.br/category/financas-pessoais/'
-const postCardEl = '.card-content > h2 > a'
-const postTitleEl = 'h1'
-const postContentEl = 'article > div'
+export class Scrapper {
+  successCount = 0
+  async execute({
+    cardListUrl,
+    postCardEl,
+    postContentEl,
+    postTitleEl,
+    scrapingLimit,
+    blogId,
+    id,
+  }: Competitor) {
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    console.log('\nBrowser launched...')
 
-async function scrapper() {
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
-  console.log('Browser launched...')
+    await page.goto(cardListUrl)
+    console.log(`\nNavigated to ${cardListUrl}`)
 
-  await page.goto(cardListUrl)
-  console.log(`Navigated to ${cardListUrl}`)
+    await page.setViewport({ width: 1366, height: 900 })
+    console.log('\nViewport set to 1366x900...')
 
-  await page.setViewport({ width: 1366, height: 900 })
-  console.log('Viewport set to 1366x900...')
+    const postList = await page.evaluate((postCardEl) => {
+      const nodeList = document.querySelectorAll(postCardEl)
 
-  const postList = await page.evaluate((postCardEl) => {
-    const nodeList = document.querySelectorAll(postCardEl)
+      const elementArray = [...nodeList]
 
-    const elementArray = [...nodeList]
+      const postList = elementArray.map((element: any) => ({
+        url: element.href,
+      }))
 
-    const postList = elementArray.map((element: any) => ({
-      url: element.href,
-    }))
+      return postList
+    }, postCardEl)
 
-    return postList
-  }, postCardEl)
+    console.log('\nPosts urls collected...')
 
-  console.log('Posts urls collected...')
+    const posts = []
+    let index = 1
 
-  const posts = []
+    for (const post of postList) {
+      if (index > scrapingLimit) {
+        break
+      } else {
+        await page.goto(post.url)
+        console.log(`\nNavigated to ${post.url}`)
 
-  for (const post of postList) {
-    await page.goto(post.url)
-    console.log(`Navigated to ${post.url}`)
-    const postData = await page.evaluate(
-      (postTitleEl, postContentEl) => {
-        return {
-          title: document.querySelector(postTitleEl)?.innerHTML,
-          content: document.querySelector(postContentEl)?.innerHTML,
-          referencePostUrl: window.location.href,
+        const postData = await page.evaluate(
+          (postTitleEl, postContentEl) => {
+            const title = document.querySelector(postTitleEl)?.innerHTML
+            const content = document.querySelector(postContentEl)?.innerHTML
+
+            return {
+              title: title || '',
+              content: content || '',
+              referencePostUrl: window.location.href,
+            }
+          },
+          postTitleEl,
+          postContentEl,
+        )
+
+        if (!postData.title || !postData.content) {
+          console.log('\nTitle or Content not found')
+        } else {
+          this.successCount++
+          console.log('\nGot data!')
+          posts.push(postData)
         }
-      },
-      postTitleEl,
-      postContentEl,
+        index++
+      }
+    }
+
+    await browser.close()
+
+    console.log(
+      `\nScraping succeeded at ${this.successCount} of ${postList.length}`,
     )
 
-    console.log('Got data!')
-    posts.push(postData)
+    this.successCount = 0
+
+    posts.forEach(async (post) => {
+      const isDuplicated = await prisma.post.findFirst({
+        where: {
+          refUrl: post.referencePostUrl,
+        },
+      })
+
+      if (isDuplicated) {
+        console.log(`\nPost already exists! reference: ${isDuplicated.refUrl}`)
+        console.log(
+          `\nAdded ${this.successCount} of ${postList.length} posts to database`,
+        )
+      } else {
+        await prisma.post.create({
+          data: {
+            refTitle: post.title,
+            refContent: post.content,
+            refUrl: post.referencePostUrl,
+            blogId,
+            competitorId: id,
+          },
+        })
+
+        this.successCount++
+
+        console.log(
+          `\nAdded ${this.successCount} of ${postList.length} posts to database`,
+        )
+      }
+    })
   }
-
-  console.log('Posts data fetched!')
-
-  await browser.close()
-
-  console.log('Scraping done with success!')
 }
-
-scrapper()

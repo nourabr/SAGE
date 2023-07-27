@@ -4,9 +4,10 @@
   "description": "O Projeto SAGE cria novos blog posts com base nos posts dos concorrentes e os posta automaticamente em um outro blog.",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "scrapper": "tsx src/use-cases/scrapping/scraping.ts",
-    "prod": "node build/server.js",
+    "dev": "tsx src/run.ts",
+    "dev:scrapper": "tsx src/use-cases/scrapping/run-scraping.ts",
+    "prod": "node build/run.js",
+    "prod:scrapper": "node build/use-cases/scrapping/run-scraping.js",
     "build": "tsup src --out-dir build",
     "docker": "sudo docker compose up -d",
     "test": "vitest run",
