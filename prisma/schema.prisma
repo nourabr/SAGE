@@ -13,15 +13,18 @@ datasource db {
 model Post {
   // Optional
   id        Int      @id @default(autoincrement())
-  status    String   @default("on queue")
+  status    String   @default("Waiting")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   error     String   @default("")
 
   // Required after rewriting
   title   String @default("")
-  url     String @default("")
   content String @default("")
+
+  // Required after scheduled
+  url     String @default("")
+  testUrl String @default("")
 
   // Required
   refTitle   String

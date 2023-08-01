@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx src/run.ts",
-    "dev:scrapper": "tsx src/use-cases/scrapping/run-scraping.ts",
+    "dev:scrapper": "tsx src/use-cases/scrapper/run-scrapper.ts",
     "dev:rewriter": "tsx src/use-cases/rewriter/run-rewriter.ts",
     "prod": "node build/run.js",
-    "prod:scrapper": "node build/use-cases/scrapping/run-scraping.js",
+    "prod:scrapper": "node build/use-cases/scrapper/run-scrapper.js",
     "build": "tsup src --out-dir build",
     "docker": "sudo docker compose up -d",
     "test": "vitest run",

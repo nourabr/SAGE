@@ -4,7 +4,11 @@ import { Rewriter } from './rewriter'
 //
 ;(async () => {
   const rewriter = new Rewriter()
-  const posts = await prisma.post.findMany()
+  const posts = await prisma.post.findMany({
+    where: {
+      status: 'Waiting',
+    },
+  })
   if (!posts) {
     throw new Error('posts not found')
   }
@@ -13,7 +17,7 @@ import { Rewriter } from './rewriter'
 
   for (const post of posts) {
     try {
-      console.log(`Queue: ${index} of ${posts.length}`)
+      console.log(`\nQueue: ${index} of ${posts.length}`)
       await rewriter.execute(post)
 
       index++

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Scrapper } from './scraping'
+import { Scrapper } from './scrapper'
 
 //
 ;(async () => {
