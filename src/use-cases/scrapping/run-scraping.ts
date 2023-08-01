@@ -11,7 +11,7 @@ import { Scrapper } from './scraping'
     throw new Error('Competitors not found')
   }
 
-  competitors.forEach((competitor) => {
-    scrapper.execute(competitor)
-  })
+  for (const competitor of competitors) {
+    await scrapper.execute(competitor)
+  }
 })()
