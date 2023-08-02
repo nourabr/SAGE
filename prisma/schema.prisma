@@ -51,9 +51,7 @@ model Blog {
   url  String @unique
 
   // Auth
-  user     String @default("")
-  password String @default("")
-  apiKey   String @default("")
+  password String
 
   // Relations
   Post       Post[]

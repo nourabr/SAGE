@@ -60,6 +60,6 @@ export class Rewriter {
 
     console.log(`Post ${id} rewrited with success!`)
 
-    return content
+    return replyContent
   }
 }

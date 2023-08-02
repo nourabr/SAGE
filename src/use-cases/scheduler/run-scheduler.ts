@@ -1,12 +1,12 @@
 import { prisma } from '@/lib/prisma'
-import { Rewriter } from './rewriter'
+import { Scheduler } from './scheduler'
 
 //
 ;(async () => {
-  const rewriter = new Rewriter()
+  const scheduler = new Scheduler()
   const posts = await prisma.post.findMany({
     where: {
-      status: 'Waiting',
+      status: 'Ready',
     },
   })
   if (!posts) {
@@ -18,7 +18,7 @@ import { Rewriter } from './rewriter'
   for (const post of posts) {
     try {
       console.log(`\nQueue: ${index} of ${posts.length}`)
-      await rewriter.execute(post)
+      await scheduler.execute(post)
 
       index++
     } catch (error: any) {
