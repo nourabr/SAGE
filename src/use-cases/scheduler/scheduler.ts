@@ -17,33 +17,48 @@ export class Scheduler {
       throw new Error('Blog not found!')
     }
 
-    // Data schema
-    // const dataSchema = z.object({
-    //   status: z.enum(['publish', 'future', 'draft', 'pending', 'private']),
-    //   title
-    // })
+    const auth = {
+      username: env.BLOG_USER,
+      password: blog.password,
+    }
 
-    // Post Data
-    // const data = {
-    //   status: 'draft',
-    // }
+    const postList = await axios.get(`${blog.url}/wp-json/wp/v2/posts`, {
+      auth,
+      data: {
+        status: 'future',
+        order: 'desc',
+      },
+    })
 
-    console.log(`${dayAdder()}`)
+    // console.log(postList.data)
 
-    // Criar requisição
+    let newPostDate = new Date()
+    // Percorrer a lista de posts e verificar qual a maior data
+
+    for (const lastPost of postList.data) {
+      const lastPostDay = new Date(lastPost.date).getDate()
+      const newPostDay = new Date(newPostDate).getDate()
+
+      if (lastPostDay > newPostDay) {
+        newPostDate = new Date(lastPost.date)
+      }
+    }
+    // Adicionar d+1 para a maior data
+    const publishDate = dayAdder(1, newPostDate)
+    // Postar sempre ao meio dia
+    // Se houver mais de 7 posts agendados, postar imediatamente
+    // Mudar status do post quando retornar 201
+
     const reply = await axios.post(
       `${blog.url}/wp-json/wp/v2/posts`,
       {
         status: 'future',
         title: clearHTMLTags(title),
         content,
-        date: dayAdder(),
+        date: publishDate,
       },
       {
-        auth: {
-          username: env.BLOG_USER,
-          password: blog.password,
-        },
+        auth,
       },
     )
 
