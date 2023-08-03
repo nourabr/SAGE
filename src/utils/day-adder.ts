@@ -9,5 +9,5 @@ export function dayAdder(day?: number, date?: Date) {
 
   date.setDate(date.getDate() + day)
 
-  return date
+  return new Date(date)
 }

@@ -6,6 +6,11 @@ import { Post } from '@prisma/client'
 import axios from 'axios'
 
 export class Scheduler {
+  postDate = new Date()
+  publishDate = new Date()
+  limit = dayAdder(7).getDate()
+  hour = 12
+
   async execute({ blogId, id, content, title }: Post) {
     const blog = await prisma.blog.findFirst({
       where: {
@@ -22,7 +27,7 @@ export class Scheduler {
       password: blog.password,
     }
 
-    const postList = await axios.get(`${blog.url}/wp-json/wp/v2/posts`, {
+    const wpPosts = await axios.get(`${blog.url}/wp-json/wp/v2/posts`, {
       auth,
       data: {
         status: 'future',
@@ -30,24 +35,22 @@ export class Scheduler {
       },
     })
 
-    // console.log(postList.data)
+    for (const wpPost of wpPosts.data) {
+      const wpPostDay = new Date(wpPost.date).getDate()
+      const currentPostDay = new Date(this.postDate).getDate()
 
-    let newPostDate = new Date()
-    // Percorrer a lista de posts e verificar qual a maior data
-
-    for (const lastPost of postList.data) {
-      const lastPostDay = new Date(lastPost.date).getDate()
-      const newPostDay = new Date(newPostDate).getDate()
-
-      if (lastPostDay > newPostDay) {
-        newPostDate = new Date(lastPost.date)
+      if (wpPostDay > currentPostDay) {
+        this.postDate = new Date(wpPost.date)
       }
     }
-    // Adicionar d+1 para a maior data
-    const publishDate = dayAdder(1, newPostDate)
-    // Postar sempre ao meio dia
-    // Se houver mais de 7 posts agendados, postar imediatamente
-    // Mudar status do post quando retornar 201
+
+    if (this.postDate.getDate() >= this.limit) {
+      this.publishDate = new Date(this.publishDate.setHours(this.hour))
+    } else {
+      this.publishDate = new Date(
+        dayAdder(1, this.postDate).setHours(this.hour),
+      )
+    }
 
     const reply = await axios.post(
       `${blog.url}/wp-json/wp/v2/posts`,
@@ -55,7 +58,7 @@ export class Scheduler {
         status: 'future',
         title: clearHTMLTags(title),
         content,
-        date: publishDate,
+        date: this.publishDate,
       },
       {
         auth,
