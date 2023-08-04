@@ -75,6 +75,7 @@ model Competitor {
   postCardEl    String
   postTitleEl   String
   postContentEl String
+  postImgEl     String
   scrapingLimit Int    @default(3)
 
   // Relations

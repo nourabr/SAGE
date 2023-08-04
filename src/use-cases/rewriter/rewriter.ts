@@ -1,19 +1,13 @@
 import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
+import { openAI } from '@/lib/open-ai'
 import { Post } from '@prisma/client'
-import { Configuration, OpenAIApi } from 'openai'
 
 export class Rewriter {
-  config = new Configuration({
-    apiKey: env.OPEN_AI_KEY,
-  })
-
-  openai = new OpenAIApi(this.config)
-
   async execute({ id, refTitle, refContent }: Post) {
     console.log('Requesting OpenAI...')
 
-    const reply = await this.openai.createChatCompletion(
+    const reply = await openAI.createChatCompletion(
       {
         model: 'gpt-3.5-turbo',
         max_tokens: 1000,

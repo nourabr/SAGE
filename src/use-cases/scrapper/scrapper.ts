@@ -10,6 +10,7 @@ export class Scrapper {
     postCardEl,
     postContentEl,
     postTitleEl,
+    postImgEl,
     scrapingLimit,
     blogId,
     id,
@@ -49,18 +50,29 @@ export class Scrapper {
         console.log(`\nNavigated to ${post.url}`)
 
         const postData = await page.evaluate(
-          (postTitleEl, postContentEl) => {
+          (postTitleEl, postContentEl, postImgEl) => {
             const title = document.querySelector(postTitleEl)?.innerHTML
             const content = document.querySelector(postContentEl)?.innerHTML
+            let image
+
+            image = document
+              .querySelector<HTMLElement>(postImgEl)
+              ?.style.backgroundImage.slice(5, -2)
+
+            if (!image) {
+              image = document.querySelector<HTMLImageElement>(postImgEl)?.src
+            }
 
             return {
               title: title || '',
               content: content || '',
               referencePostUrl: window.location.href,
+              img: image || '',
             }
           },
           postTitleEl,
           postContentEl,
+          postImgEl,
         )
 
         if (!postData.title || !postData.content) {
@@ -100,6 +112,7 @@ export class Scrapper {
             refTitle: post.title,
             refContent: post.content,
             refUrl: post.referencePostUrl,
+            refImage: post.img,
             blogId,
             competitorId: id,
           },

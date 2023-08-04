@@ -9,8 +9,9 @@ import { Imager } from './imager'
       status: 'Waiting for Imager',
     },
   })
-  if (!posts) {
-    throw new Error('Posts not found!')
+
+  if (posts.length < 1) {
+    console.log('Posts not found!')
   }
 
   let index = 1
