@@ -16,20 +16,20 @@ model Post {
   status    String   @default("Waiting")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  error     String   @default("")
+  log       String   @default("")
 
   // Required after rewriting
   title   String @default("")
   content String @default("")
 
   // Required after scheduled
-  url     String @default("")
-  testUrl String @default("")
+  url String @default("")
 
   // Required
   refTitle   String
   refUrl     String @unique
   refContent String
+  refImage   String @default("")
 
   // Relations
   blog         Blog       @relation(fields: [blogId], references: [id])

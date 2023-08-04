@@ -1,7 +1,12 @@
 // Resgatar a imagem do concorrente no scrapping
 // Salver url no banco
 
-// Converter em PNG (com tamanho menor que 4mb)
+import { Post } from '@prisma/client'
+
+export class Imager {
+  // Converter em PNG (com tamanho menor que 4mb)
+  async execute({ id, refImage }: Post) {}
+}
 // Cortar imagem (1:1)
 // Enviar para o DALL-E
 // Receber url da imagem
