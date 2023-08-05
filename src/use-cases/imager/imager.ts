@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma'
 import { sendToWordpress } from './send-to-wordpress'
 
 export class Imager {
-  async execute({ id, refImage, blogId }: Post) {
+  async execute({ id, refImage, blogId, title }: Post) {
     const getImageFromRef = axios.get(refImage, {
       responseType: 'arraybuffer',
     })
@@ -49,7 +49,12 @@ export class Imager {
           ).slice(1, -1)
 
           // Envia pro Wordpress
-          const wpImageId = await sendToWordpress(generatedImageUrl, blogId)
+          const wpImageId = await sendToWordpress(
+            generatedImageUrl,
+            blogId,
+            id,
+            title,
+          )
 
           // Salvar id retornado da imagem no banco
           // Usar o id em featured_media no scheduler
