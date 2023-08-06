@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "posts" ADD COLUMN     "featuredMedia" INTEGER NOT NULL DEFAULT 0,
+ALTER COLUMN "refImage" DROP DEFAULT;

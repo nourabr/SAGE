@@ -1,5 +1,6 @@
 import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
+import { clearHTMLTags } from '@/utils/clear-html-tags'
 import axios from 'axios'
 import fs from 'node:fs'
 
@@ -24,6 +25,7 @@ export async function sendToWordpress(
     responseType: 'arraybuffer',
   })
 
+  const postTitle = clearHTMLTags(title)
   const outputPath = `./img/${postId}.png`
 
   fs.writeFile(outputPath, getImageFromUrl.data, (err) => {
@@ -39,9 +41,9 @@ export async function sendToWordpress(
       .post(
         `${blog.url}/wp-json/wp/v2/media`,
         {
-          title,
-          alt_text: title,
-          description: title,
+          title: postTitle,
+          alt_text: postTitle,
+          description: postTitle,
           file: fs.createReadStream(outputPath),
         },
         {
@@ -54,6 +56,25 @@ export async function sendToWordpress(
           },
         },
       )
-      .then(({ data }) => console.log(data))
+      .then(async ({ data }) => {
+        console.log(`\nUploaded image ${data.id} to Wordpress!`)
+
+        // Upload id to db
+        const isUpdated = await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            featuredMedia: data.id,
+            status: 'Ready',
+          },
+        })
+
+        if (!isUpdated) {
+          throw new Error('Update error on send-to-wordpress file!')
+        }
+
+        console.log(`\nPost model updated!`)
+      })
   })
 }

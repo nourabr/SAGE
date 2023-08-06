@@ -10,7 +10,7 @@ import { Rewriter } from './rewriter'
     },
   })
   if (posts.length < 1) {
-    console.log('Posts not found!')
+    console.log(`Couldn't find posts with status 'Waiting'!`)
   }
 
   let index = 1

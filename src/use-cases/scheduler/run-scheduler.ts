@@ -10,7 +10,7 @@ import { Scheduler } from './scheduler'
     },
   })
   if (posts.length < 1) {
-    console.log('Posts not found!')
+    console.log(`Couldn't find posts with status 'Ready'!`)
   }
 
   let index = 1

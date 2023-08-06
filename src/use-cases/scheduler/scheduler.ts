@@ -11,7 +11,7 @@ export class Scheduler {
   limit = dayAdder(7).getDate()
   hour = 12
 
-  async execute({ blogId, id, content, title }: Post) {
+  async execute({ blogId, id, content, title, featuredMedia }: Post) {
     const blog = await prisma.blog.findFirst({
       where: {
         id: blogId,
@@ -19,7 +19,7 @@ export class Scheduler {
     })
 
     if (!blog) {
-      throw new Error('Blog not found!')
+      throw new Error('\nBlog not found!')
     }
 
     const auth = {
@@ -59,17 +59,33 @@ export class Scheduler {
         title: clearHTMLTags(title),
         content,
         date: this.publishDate,
+        featured_media: featuredMedia,
       },
       {
         auth,
       },
     )
 
+    const postUrl = `${reply.data.permalink_template.replace(
+      '%postname%',
+      reply.data.slug,
+    )}`
+
     if (reply.status !== 201) {
       throw new Error('')
     }
 
-    console.log(`Post ${id} scheduled with success!`)
+    await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'Posted',
+        url: postUrl,
+      },
+    })
+
+    console.log(`\nPost ${id} scheduled with success!\nLink: ${postUrl}`)
     return reply
   }
 }

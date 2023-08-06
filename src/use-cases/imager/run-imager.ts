@@ -11,7 +11,7 @@ import { Imager } from './imager'
   })
 
   if (posts.length < 1) {
-    console.log('Posts not found!')
+    console.log(`Couldn't find posts with status 'Waiting for Imager'!`)
   }
 
   let index = 1

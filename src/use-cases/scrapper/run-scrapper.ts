@@ -8,7 +8,7 @@ import { Scrapper } from './scrapper'
   const competitors = await prisma.competitor.findMany()
 
   if (competitors.length < 1) {
-    console.log('Posts not found!')
+    console.log(`Competitors not found!`)
   }
 
   for (const competitor of competitors) {

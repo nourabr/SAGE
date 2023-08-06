@@ -25,11 +25,14 @@ model Post {
   // Required after scheduled
   url String @default("")
 
+  // Required after imager
+  featuredMedia Int @default(0)
+
   // Required
   refTitle   String
   refUrl     String @unique
   refContent String
-  refImage   String @default("")
+  refImage   String
 
   // Relations
   blog         Blog       @relation(fields: [blogId], references: [id])

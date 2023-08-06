@@ -3,19 +3,18 @@ import sharp from 'sharp'
 import axios from 'axios'
 import fs from 'node:fs'
 import { env } from '@/env'
-import { prisma } from '@/lib/prisma'
 import { sendToWordpress } from './send-to-wordpress'
 
 export class Imager {
   async execute({ id, refImage, blogId, title }: Post) {
-    const getImageFromRef = axios.get(refImage, {
+    const getImageFromRef = await axios.get(refImage, {
       responseType: 'arraybuffer',
     })
 
     console.log(`\nPreparing image...`)
     const localImgPath = `./img/${id}.png`
 
-    sharp((await getImageFromRef).data)
+    sharp(getImageFromRef.data)
       .ensureAlpha(0.99)
       .resize(512, 512)
       .toFile(localImgPath)
@@ -23,7 +22,7 @@ export class Imager {
         console.log(`\nReady for DALL-E`)
         fs.readFile(localImgPath, async (err, img) => {
           const form = new FormData()
-          form.append('size', '256x256')
+          form.append('size', '1024x1024')
           form.append('image', new Blob([img]))
 
           console.log('Requesting OpenAI...')
@@ -40,7 +39,7 @@ export class Imager {
           )
 
           if (!openAIReply) {
-            console.log(`OpenAI Request error: ${err}`)
+            console.log(`\nOpenAI Request error: ${err}`)
           }
 
           // Receber url da imagem
@@ -48,22 +47,14 @@ export class Imager {
             openAIReply.data.data[0].url,
           ).slice(1, -1)
 
-          // Envia pro Wordpress
-          const wpImageId = await sendToWordpress(
-            generatedImageUrl,
-            blogId,
-            id,
-            title,
-          )
+          // Envia pro Wordpress e salva no banco
+          await sendToWordpress(generatedImageUrl, blogId, id, title)
 
-          // Salvar id retornado da imagem no banco
-          // Usar o id em featured_media no scheduler
-
-          console.log(generatedImageUrl)
+          console.log(`\nImager work done with success!`)
         })
       })
       .catch((err) => {
-        console.log(`Something went wrong: ${err}`)
+        console.log(`\nSomething went wrong: ${err}`)
       })
   }
 }

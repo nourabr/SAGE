@@ -42,7 +42,7 @@ export class Rewriter {
         id,
       },
       data: {
-        status: 'Ready',
+        status: 'Waiting for Imager',
         title,
         content,
       },
