@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Rewriter } from './rewriter'
 
-//
-;(async () => {
+export async function runRewriter() {
   const rewriter = new Rewriter()
   const posts = await prisma.post.findMany({
     where: {
@@ -30,4 +29,6 @@ import { Rewriter } from './rewriter'
       }
     }
   }
-})()
+}
+
+runRewriter()

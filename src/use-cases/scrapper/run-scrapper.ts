@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Scrapper } from './scrapper'
 
-//
-;(async () => {
+export async function runScrapper() {
   const scrapper = new Scrapper()
 
   const competitors = await prisma.competitor.findMany()
@@ -14,4 +13,6 @@ import { Scrapper } from './scrapper'
   for (const competitor of competitors) {
     await scrapper.execute(competitor)
   }
-})()
+}
+
+runScrapper()

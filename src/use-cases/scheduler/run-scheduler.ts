@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Scheduler } from './scheduler'
 
-//
-;(async () => {
+export async function runScheduler() {
   const scheduler = new Scheduler()
   const posts = await prisma.post.findMany({
     where: {
@@ -30,4 +29,6 @@ import { Scheduler } from './scheduler'
       }
     }
   }
-})()
+}
+
+runScheduler()

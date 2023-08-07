@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { Imager } from './imager'
 
 //
-;(async () => {
+export async function runImager() {
   const imager = new Imager()
   const posts = await prisma.post.findMany({
     where: {
@@ -31,4 +31,6 @@ import { Imager } from './imager'
       }
     }
   }
-})()
+}
+
+runImager()

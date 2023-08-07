@@ -9,6 +9,7 @@
     "dev:rewriter": "tsx src/use-cases/rewriter/run-rewriter.ts",
     "dev:scheduler": "tsx src/use-cases/scheduler/run-scheduler.ts",
     "dev:imager": "tsx src/use-cases/imager/run-imager.ts",
+    "dev:all": "tsx src/run-sage.ts",
     "prod": "node build/run.js",
     "prod:scrapper": "node build/use-cases/scrapper/run-scrapper.js",
     "build": "tsup src --out-dir build",
