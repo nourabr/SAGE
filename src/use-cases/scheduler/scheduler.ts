@@ -2,6 +2,7 @@ import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
 import { clearHTMLTags } from '@/utils/clear-html-tags'
 import { dayAdder } from '@/utils/day-adder'
+import { logError } from '@/utils/log-error'
 import { Post } from '@prisma/client'
 import axios from 'axios'
 
@@ -19,7 +20,9 @@ export class Scheduler {
     })
 
     if (!blog) {
-      throw new Error('\nBlog not found!')
+      const message = '\nBlog not found!'
+      logError(message)
+      throw new Error(message)
     }
 
     const auth = {

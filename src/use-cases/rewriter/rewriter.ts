@@ -2,6 +2,7 @@ import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
 import { openAI } from '@/lib/open-ai'
 import { Post } from '@prisma/client'
+import { logError } from '@/utils/log-error'
 
 export class Rewriter {
   async execute({ id, refTitle, refContent }: Post) {
@@ -29,7 +30,9 @@ export class Rewriter {
     )
 
     if (!reply.data.choices[0].message) {
-      throw new Error('Error making openAI request')
+      const message = 'Error making openAI request'
+      logError(message)
+      throw new Error(message)
     }
 
     const replyContent = `${reply.data.choices[0].message.content}`
@@ -49,7 +52,9 @@ export class Rewriter {
     })
 
     if (!hasUpdated) {
-      throw new Error('Error updating data')
+      const message = 'Error updating data'
+      logError(message)
+      throw new Error(message)
     }
 
     console.log(`Post ${id} rewrited with success!`)

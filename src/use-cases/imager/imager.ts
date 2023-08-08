@@ -4,6 +4,7 @@ import axios from 'axios'
 import fs from 'node:fs'
 import { env } from '@/env'
 import { sendToWordpress } from './send-to-wordpress'
+import { logError } from '@/utils/log-error'
 
 export class Imager {
   async execute({ id, refImage, blogId, title }: Post) {
@@ -39,7 +40,7 @@ export class Imager {
           )
 
           if (!openAIReply) {
-            console.log(`\nOpenAI Request error: ${err}`)
+            logError(`\nOpenAI Request error: ${err}`)
           }
 
           const generatedImageUrl = JSON.stringify(
@@ -50,7 +51,7 @@ export class Imager {
         })
       })
       .catch((err) => {
-        console.log(`\nSomething went wrong: ${err}`)
+        logError(`\nSomething went wrong: ${err}`)
       })
   }
 }

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { logError } from '@/utils/log-error'
 import { Competitor } from '@prisma/client'
 
 import puppeteer from 'puppeteer'
@@ -76,7 +77,7 @@ export class Scrapper {
         )
 
         if (!postData.title || !postData.content) {
-          console.log('\nTitle or Content not found')
+          logError('\nTitle or Content not found')
         } else {
           this.successCount++
           console.log('\nGot data!')
@@ -102,7 +103,7 @@ export class Scrapper {
       })
 
       if (isDuplicated) {
-        console.log(`\nPost already exists! reference: ${isDuplicated.refUrl}`)
+        logError(`\nPost already exists! reference: ${isDuplicated.refUrl}`)
         console.log(
           `\nAdded ${this.successCount} of ${postList.length} posts to database`,
         )

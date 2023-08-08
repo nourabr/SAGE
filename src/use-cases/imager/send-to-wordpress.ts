@@ -1,6 +1,7 @@
 import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
 import { clearHTMLTags } from '@/utils/clear-html-tags'
+import { logError } from '@/utils/log-error'
 import axios from 'axios'
 import fs from 'node:fs'
 
@@ -71,7 +72,9 @@ export async function sendToWordpress(
         })
 
         if (!isUpdated) {
-          throw new Error('Update error on send-to-wordpress file!')
+          const message = 'Update error on send-to-wordpress file!'
+          logError(message)
+          throw new Error(message)
         }
       })
   })
