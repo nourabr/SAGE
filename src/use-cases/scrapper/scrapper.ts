@@ -41,10 +41,9 @@ export class Scrapper {
     console.log('\nPosts urls collected...')
 
     const posts = []
-    let index = 1
 
-    for (const post of postList) {
-      if (index > scrapingLimit) {
+    for (const [index, post] of postList.entries()) {
+      if (index + 1 > scrapingLimit) {
         break
       } else {
         await page.goto(post.url)
@@ -83,7 +82,6 @@ export class Scrapper {
           console.log('\nGot data!')
           posts.push(postData)
         }
-        index++
       }
     }
 
