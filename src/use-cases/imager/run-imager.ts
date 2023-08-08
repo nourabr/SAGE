@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Imager } from './imager'
+import { logError } from '@/utils/log-error'
 
 //
 export async function runImager() {
@@ -11,18 +12,17 @@ export async function runImager() {
   })
 
   if (posts.length < 1) {
-    console.log(`Couldn't find posts with status 'Waiting for Imager'!`)
+    logError(`Couldn't find posts with status 'Waiting for Imager'!`)
   }
 
-  let index = 1
-
-  for (const post of posts) {
+  for (const [index, post] of posts.entries()) {
     try {
-      console.log(`\nQueue: ${index} of ${posts.length}`)
-      await imager.execute(post)
-
-      index++
+      setTimeout(async () => {
+        console.log(`\nQueue: ${index + 1} of ${posts.length}`)
+        await imager.execute(post)
+      }, index * 7000)
     } catch (error: any) {
+      logError(error, post)
       if (error.response) {
         console.log(error.response.status)
         console.log(error.response.data)

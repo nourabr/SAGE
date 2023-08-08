@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Scheduler } from './scheduler'
+import { logError } from '@/utils/log-error'
 
 export async function runScheduler() {
   const scheduler = new Scheduler()
@@ -9,7 +10,7 @@ export async function runScheduler() {
     },
   })
   if (posts.length < 1) {
-    console.log(`Couldn't find posts with status 'Ready'!`)
+    logError(`Couldn't find posts with status 'Ready'!`)
   }
 
   let index = 1
@@ -21,6 +22,7 @@ export async function runScheduler() {
 
       index++
     } catch (error: any) {
+      logError(error, post)
       if (error.response) {
         console.log(error.response.status)
         console.log(error.response.data)

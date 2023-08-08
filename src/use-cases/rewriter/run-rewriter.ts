@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Rewriter } from './rewriter'
+import { logError } from '@/utils/log-error'
 
 export async function runRewriter() {
   const rewriter = new Rewriter()
@@ -9,18 +10,15 @@ export async function runRewriter() {
     },
   })
   if (posts.length < 1) {
-    console.log(`Couldn't find posts with status 'Waiting'!`)
+    logError(`Couldn't find posts with status 'Waiting'!`)
   }
 
-  let index = 1
-
-  for (const post of posts) {
+  for (const [index, post] of posts.entries()) {
     try {
-      console.log(`\nQueue: ${index} of ${posts.length}`)
+      console.log(`\nQueue: ${index + 1} of ${posts.length}`)
       await rewriter.execute(post)
-
-      index++
     } catch (error: any) {
+      logError(error, post)
       if (error.response) {
         console.log(error.response.status)
         console.log(error.response.data)

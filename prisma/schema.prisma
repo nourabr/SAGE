@@ -39,6 +39,7 @@ model Post {
   blogId       String
   competitor   Competitor @relation(fields: [competitorId], references: [id])
   competitorId String
+  Log          Log[]
 
   @@map("posts")
 }
@@ -85,6 +86,19 @@ model Competitor {
   blog   Blog   @relation(fields: [blogId], references: [id])
   blogId String
   Post   Post[]
+  Log    Log[]
 
   @@map("competitors")
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  message   String
+
+  // Relations
+  Post         Post       @relation(fields: [postId], references: [id])
+  postId       Int        @default(0)
+  Competitor   Competitor @relation(fields: [competitorId], references: [id])
+  competitorId String     @default("")
 }

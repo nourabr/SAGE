@@ -1,6 +1,7 @@
 export function clearHTMLTags(string: string) {
   const htmlTags = [
     '<h1>',
+    '<h1 class="wp-block-heading">',
     '</h1>',
     '<h2>',
     '</h2>',

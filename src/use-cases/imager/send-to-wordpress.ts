@@ -73,8 +73,6 @@ export async function sendToWordpress(
         if (!isUpdated) {
           throw new Error('Update error on send-to-wordpress file!')
         }
-
-        console.log(`\nPost model updated!`)
       })
   })
 }

@@ -42,15 +42,11 @@ export class Imager {
             console.log(`\nOpenAI Request error: ${err}`)
           }
 
-          // Receber url da imagem
           const generatedImageUrl = JSON.stringify(
             openAIReply.data.data[0].url,
           ).slice(1, -1)
 
-          // Envia pro Wordpress e salva no banco
           await sendToWordpress(generatedImageUrl, blogId, id, title)
-
-          console.log(`\nImager work done with success!`)
         })
       })
       .catch((err) => {
