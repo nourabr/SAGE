@@ -13,14 +13,10 @@ export async function runScheduler() {
     logError(`Couldn't find posts with status 'Ready'!`)
   }
 
-  let index = 1
-
-  for (const post of posts) {
+  for (const [index, post] of posts.entries()) {
     try {
-      console.log(`\nQueue: ${index} of ${posts.length}`)
+      console.log(`\nQueue: ${index + 1} of ${posts.length}`)
       await scheduler.execute(post)
-
-      index++
     } catch (error: any) {
       logError(error, post)
       if (error.response) {
