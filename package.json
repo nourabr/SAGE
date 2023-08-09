@@ -12,11 +12,12 @@
     "dev:scheduler": "tsx src/use-cases/scheduler/run-scheduler.ts",
     "dev:imager": "tsx src/use-cases/imager/run-imager.ts",
     "build": "tsup src --out-dir build",
-    "scrapper": "tsx build/use-cases/scrapper/run-scrapper.js",
-    "rewriter": "tsx build/use-cases/rewriter/run-rewriter.js",
-    "scheduler": "tsx build/use-cases/scheduler/run-scheduler.js",
-    "imager": "tsx build/use-cases/imager/run-imager.js",
-    "dev:docker": "sudo docker compose up -d"
+    "scrapper": "node build/use-cases/scrapper/run-scrapper.js",
+    "rewriter": "node build/use-cases/rewriter/run-rewriter.js",
+    "scheduler": "node build/use-cases/scheduler/run-scheduler.js",
+    "imager": "node build/use-cases/imager/run-imager.js",
+    "dev:docker": "sudo docker compose up -d",
+    "build-command": "npm i & npx prisma migrate dev & npm run build"
   },
   "keywords": [],
   "author": "",
