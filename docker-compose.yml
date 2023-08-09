@@ -9,3 +9,6 @@ services:
       - POSTGRESQL_USERNAME=sage
       - POSTGRESQL_PASSWORD=sage
       - POSTGRESQL_DATABASE=sage
+
+# docker container ls
+# docker exec -it container_id psql -U sage -d sage

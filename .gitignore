@@ -9,3 +9,6 @@ test.ts
 
 # Images
 img/*
+
+# Build
+build
