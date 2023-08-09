@@ -15,6 +15,7 @@ export class Scrapper {
     scrapingLimit,
     blogId,
     id,
+    unwantedTags,
   }: Competitor) {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
@@ -50,9 +51,40 @@ export class Scrapper {
         console.log(`\nNavigated to ${post.url}`)
 
         const postData = await page.evaluate(
-          (postTitleEl, postContentEl, postImgEl) => {
+          (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
             const title = document.querySelector(postTitleEl)?.innerHTML
-            const content = document.querySelector(postContentEl)?.innerHTML
+            const contentEl = document.querySelector(postContentEl)
+
+            if (!contentEl) {
+              throw new Error()
+            }
+
+            let cleanContent = ''
+
+            for (const element of contentEl.childNodes) {
+              // @ts-ignore
+              if (!element.innerText) {
+                continue
+              }
+              // @ts-ignore
+              const currentTag = element.localName
+              let isCurrentTagUnwanted = false
+
+              for (const unwantedTag of unwantedTags) {
+                if (currentTag === unwantedTag) {
+                  isCurrentTagUnwanted = true
+                  break
+                }
+              }
+
+              if (!isCurrentTagUnwanted) {
+                // @ts-ignore
+                cleanContent += `<${currentTag}>${element.innerText}</${currentTag}>`
+              }
+            }
+
+            const content = cleanContent
+
             let image
 
             image = document
@@ -73,6 +105,7 @@ export class Scrapper {
           postTitleEl,
           postContentEl,
           postImgEl,
+          unwantedTags,
         )
 
         if (!postData.title || !postData.content) {
@@ -88,7 +121,9 @@ export class Scrapper {
     await browser.close()
 
     console.log(
-      `\nScraping succeeded at ${this.successCount} of ${postList.length}`,
+      `\nScraping succeeded at ${this.successCount} of ${
+        postList.length <= scrapingLimit ? postList.length : scrapingLimit
+      }`,
     )
 
     this.successCount = 0
@@ -103,7 +138,9 @@ export class Scrapper {
       if (isDuplicated) {
         logError(`\nPost already exists! reference: ${isDuplicated.refUrl}`)
         console.log(
-          `\nAdded ${this.successCount} of ${postList.length} posts to database`,
+          `\nAdded ${this.successCount} of ${
+            postList.length <= scrapingLimit ? postList.length : scrapingLimit
+          } posts to database`,
         )
       } else {
         await prisma.post.create({
@@ -120,7 +157,9 @@ export class Scrapper {
         this.successCount++
 
         console.log(
-          `\nAdded ${this.successCount} of ${postList.length} posts to database`,
+          `\nAdded ${this.successCount} of ${
+            postList.length <= scrapingLimit ? postList.length : scrapingLimit
+          } posts to database`,
         )
       }
     })

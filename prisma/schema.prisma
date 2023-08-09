@@ -79,7 +79,8 @@ model Competitor {
   postTitleEl   String
   postContentEl String
   postImgEl     String
-  scrapingLimit Int    @default(3)
+  scrapingLimit Int      @default(3)
+  unwantedTags  String[] @default([])
 
   // Relations
   blog   Blog   @relation(fields: [blogId], references: [id])
