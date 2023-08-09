@@ -5,7 +5,11 @@ import { logError } from '@/utils/log-error'
 export async function runScrapper() {
   const scrapper = new Scrapper()
 
-  const competitors = await prisma.competitor.findMany()
+  const competitors = await prisma.competitor.findMany({
+    // where: {
+    //   id: `c4b11711-e011-4c87-b2e4-9307a1b21389`,
+    // },
+  })
 
   if (competitors.length < 1) {
     logError(`Competitors not found!`)
@@ -16,7 +20,7 @@ export async function runScrapper() {
       setTimeout(async () => {
         console.log(`\nQueue: ${index + 1} of ${competitors.length}`)
         await scrapper.execute(competitor)
-      }, index * 3000)
+      }, index * 7000)
     } catch (error: any) {
       logError(error, undefined, competitor)
       if (error.response) {
