@@ -12,6 +12,7 @@ img/*
 
 # Build
 build
+cache
 
 # Export from database
 db-exports
