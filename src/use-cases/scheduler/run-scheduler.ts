@@ -15,7 +15,7 @@ export async function runScheduler() {
 
   for (const [index, post] of posts.entries()) {
     try {
-      console.log(`\nQueue: ${index + 1} of ${posts.length}`)
+      console.log(`\nScheduler queue: ${index + 1} of ${posts.length}`)
       await scheduler.execute(post)
     } catch (error: any) {
       logError(error, post)
@@ -29,4 +29,4 @@ export async function runScheduler() {
   }
 }
 
-runScheduler()
+// runScheduler()

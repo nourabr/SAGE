@@ -18,7 +18,7 @@ export async function runScrapper() {
   for (const [index, competitor] of competitors.entries()) {
     try {
       setTimeout(async () => {
-        console.log(`\nQueue: ${index + 1} of ${competitors.length}`)
+        console.log(`\nScrapper queue: ${index + 1} of ${competitors.length}`)
         await scrapper.execute(competitor)
       }, index * 7000)
     } catch (error: any) {
@@ -33,4 +33,4 @@ export async function runScrapper() {
   }
 }
 
-runScrapper()
+// runScrapper()

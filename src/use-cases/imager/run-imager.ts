@@ -18,7 +18,7 @@ export async function runImager() {
   for (const [index, post] of posts.entries()) {
     try {
       setTimeout(async () => {
-        console.log(`\nQueue: ${index + 1} of ${posts.length}`)
+        console.log(`\nImager queue: ${index + 1} of ${posts.length}`)
         await imager.execute(post)
       }, index * 10000)
     } catch (error: any) {
@@ -33,4 +33,4 @@ export async function runImager() {
   }
 }
 
-runImager()
+// runImager()
