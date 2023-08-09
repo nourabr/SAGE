@@ -12,15 +12,28 @@ export class Scheduler {
   limit = dayAdder(7).getDate()
   hour = 12
 
-  async execute({ blogId, id, content, title, featuredMedia }: Post) {
+  async execute({
+    blogId,
+    id,
+    content,
+    title,
+    featuredMedia,
+    competitorId,
+  }: Post) {
     const blog = await prisma.blog.findFirst({
       where: {
         id: blogId,
       },
     })
 
-    if (!blog) {
-      const message = '\nBlog not found!'
+    const competitor = await prisma.competitor.findFirst({
+      where: {
+        id: competitorId,
+      },
+    })
+
+    if (!blog || !competitor) {
+      const message = '\nBlog or Competitor not found!'
       logError(message)
       throw new Error(message)
     }
@@ -63,6 +76,7 @@ export class Scheduler {
         content,
         date: this.publishDate,
         featured_media: featuredMedia,
+        categories: [competitor.blogCategoryId],
       },
       {
         auth,
