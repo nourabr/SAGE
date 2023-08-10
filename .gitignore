@@ -13,6 +13,7 @@ img/*
 # Build
 build
 cache
+puppeteerrc.cjs
 
 # Export from database
 db-exports
