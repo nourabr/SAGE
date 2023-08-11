@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(['dev', 'test', 'production']).default('dev'),
+  NODE_ENV: z.enum(['dev', 'test', 'production']).default('production'),
   PORT: z.coerce.number().default(3333),
   OPEN_AI_KEY: z.string(),
   OPEN_AI_PRE_TEXT: z.string(),

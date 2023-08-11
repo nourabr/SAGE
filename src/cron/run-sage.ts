@@ -1,8 +1,8 @@
-import { runScrapper } from './use-cases/scrapper/run-scrapper'
-import { runRewriter } from './use-cases/rewriter/run-rewriter'
-import { runImager } from './use-cases/imager/run-imager'
-import { runScheduler } from './use-cases/scheduler/run-scheduler'
-import { logError } from './utils/log-error'
+import { runScrapper } from '../use-cases/scrapper/run-scrapper'
+import { runRewriter } from '../use-cases/rewriter/run-rewriter'
+import { runImager } from '../use-cases/imager/run-imager'
+import { runScheduler } from '../use-cases/scheduler/run-scheduler'
+import { logError } from '../utils/log-error'
 
 const SAGE = [runScrapper, runRewriter, runImager, runScheduler]
 

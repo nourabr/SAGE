@@ -20,7 +20,7 @@ export async function runScrapper() {
       setTimeout(async () => {
         console.log(`\nScrapper queue: ${index + 1} of ${competitors.length}`)
         await scrapper.execute(competitor)
-      }, index * 10000)
+      }, index * 7000)
     } catch (error: any) {
       logError(error, undefined, competitor)
       if (error.response) {
