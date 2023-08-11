@@ -9,6 +9,7 @@ test.ts
 
 # Images
 img/*
+!img/example.png
 
 # Build
 build

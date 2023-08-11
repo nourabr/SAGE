@@ -3,7 +3,6 @@ import sharp from 'sharp'
 import axios from 'axios'
 import fs from 'node:fs'
 import { env } from '@/env'
-import path from 'node:path'
 import { sendToWordpress } from './send-to-wordpress'
 import { logError } from '@/utils/log-error'
 
@@ -14,8 +13,7 @@ export class Imager {
     })
 
     console.log(`\nPreparing image...`)
-
-    const localImgPath = path.join(__dirname, 'img', `${id}.png`)
+    const localImgPath = `./img/${id}.png`
 
     sharp(getImageFromRef.data)
       .ensureAlpha(0.99)
