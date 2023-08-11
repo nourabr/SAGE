@@ -11,7 +11,7 @@ for (const [index, runService] of SAGE.entries()) {
     setTimeout(async () => {
       console.log(`\n@ SAGE Queue: ${index + 1} of ${SAGE.length} @`)
       await runService()
-    }, index * 30000)
+    }, index * 60000)
   } catch (error: any) {
     logError(`@@@ run-sage ERROR @@@\n${error}`)
     if (error.response) {
