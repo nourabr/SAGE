@@ -82,6 +82,7 @@ model Competitor {
   scrapingLimit  Int      @default(3)
   unwantedTags   String[] @default([])
   blogCategoryId Int      @default(0)
+  ifBeginWith    String   @default("")
 
   // Relations
   blog   Blog   @relation(fields: [blogId], references: [id])

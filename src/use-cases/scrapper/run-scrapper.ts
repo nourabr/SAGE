@@ -6,9 +6,9 @@ export async function runScrapper() {
   const scrapper = new Scrapper()
 
   const competitors = await prisma.competitor.findMany({
-    // where: {
-    //   id: `c4b11711-e011-4c87-b2e4-9307a1b21389`,
-    // },
+    where: {
+      id: `69f373b6-7459-4cbb-94a8-7fbec14be547`,
+    },
   })
 
   if (competitors.length < 1) {

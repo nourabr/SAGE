@@ -52,11 +52,14 @@ export class Scrapper {
 
         const postData = await page.evaluate(
           (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
-            const title = document.querySelector(postTitleEl)?.innerHTML
+            const title = `<h1>${
+              // @ts-ignore
+              document.querySelector(postTitleEl)?.innerText
+            }</h1>`
             const contentEl = document.querySelector(postContentEl)
 
             if (!contentEl) {
-              throw new Error()
+              throw new Error('ContentEl not found!')
             }
 
             let cleanContent = ''
@@ -64,6 +67,10 @@ export class Scrapper {
             for (const element of contentEl.childNodes) {
               // @ts-ignore
               if (!element.innerText) {
+                continue
+              }
+              // @ts-ignore // Skip content starting with <p>+
+              if (element.innerText.substr(0, 1) === '+') {
                 continue
               }
               // @ts-ignore

@@ -7,6 +7,7 @@ const envSchema = z.object({
   OPEN_AI_KEY: z.string(),
   OPEN_AI_PRE_TEXT: z.string(),
   BLOG_USER: z.string(),
+  PUPPETEER_CACHE_DIR: z.string().default(''),
 })
 
 const _env = envSchema.safeParse(process.env)
