@@ -7,7 +7,7 @@ export async function runScrapper() {
 
   const competitors = await prisma.competitor.findMany({
     where: {
-      id: `69f373b6-7459-4cbb-94a8-7fbec14be547`,
+      // id: `48f67060-0ff3-448a-9d9b-4cae3d7f4f91`, // Quanto Custa Viajar
     },
   })
 

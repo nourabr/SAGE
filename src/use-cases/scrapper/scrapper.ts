@@ -5,6 +5,7 @@ import { Competitor } from '@prisma/client'
 import puppeteer from 'puppeteer'
 
 export class Scrapper {
+  timeOutTime = 600000
   successCount = 0
   async execute({
     cardListUrl,
@@ -21,7 +22,7 @@ export class Scrapper {
     const page = await browser.newPage()
     console.log('\nBrowser launched...')
 
-    await page.goto(cardListUrl)
+    await page.goto(cardListUrl, { timeout: this.timeOutTime })
     console.log(`\nNavigated to ${cardListUrl}`)
 
     await page.setViewport({ width: 1366, height: 900 })
@@ -47,7 +48,10 @@ export class Scrapper {
       if (index + 1 > scrapingLimit) {
         break
       } else {
-        await page.goto(post.url)
+        await page.goto(post.url, {
+          // waitUntil: 'networkidle2',
+          timeout: this.timeOutTime,
+        })
         console.log(`\nNavigated to ${post.url}`)
 
         const postData = await page.evaluate(
@@ -74,7 +78,7 @@ export class Scrapper {
                 continue
               }
               // @ts-ignore
-              const currentTag = element.localName
+              let currentTag = element.localName
               let isCurrentTagUnwanted = false
 
               for (const unwantedTag of unwantedTags) {
@@ -85,6 +89,10 @@ export class Scrapper {
               }
 
               if (!isCurrentTagUnwanted) {
+                if (currentTag === 'div') {
+                  currentTag = 'p'
+                }
+
                 // @ts-ignore
                 cleanContent += `<${currentTag}>${element.innerText}</${currentTag}>`
               }
@@ -94,13 +102,19 @@ export class Scrapper {
 
             let image
 
+            // If image url on CSS
             image = document
               .querySelector<HTMLElement>(postImgEl)
               ?.style.backgroundImage.slice(5, -2)
 
+            console.log(`Essa é nossa Imagem: ${image}`)
+
+            // If image on img
             if (!image) {
               image = document.querySelector<HTMLImageElement>(postImgEl)?.src
             }
+
+            console.log(`Essa é nossa Imagem: ${image}`)
 
             return {
               title: title || '',

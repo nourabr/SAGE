@@ -6,11 +6,16 @@ import { logError } from '@/utils/log-error'
 
 export class Rewriter {
   async execute({ id, refTitle, refContent }: Post) {
-    console.log('Requesting OpenAI...')
+    let gptModel = 'gpt-3.5-turbo'
 
+    if (refContent.length > 7000) {
+      gptModel = 'gpt-3.5-turbo-16k'
+    }
+
+    console.log('Requesting OpenAI...')
     const reply = await openAI.createChatCompletion(
       {
-        model: 'gpt-3.5-turbo',
+        model: gptModel,
         max_tokens: 1000,
         temperature: 0.97,
         messages: [
@@ -25,7 +30,7 @@ export class Rewriter {
         ],
       },
       {
-        timeout: 60000, // 1 minute
+        timeout: 80000, // 1 minute
       },
     )
 
