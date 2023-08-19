@@ -1,4 +1,4 @@
-const { env } = require('@/env')
+const { env } = require('build/env')
 
 if (env.NODE_ENV === 'production'){
   const { join } = require('path')
