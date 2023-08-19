@@ -5,7 +5,7 @@ import { Competitor } from '@prisma/client'
 import puppeteer from 'puppeteer'
 
 export class Scrapper {
-  timeOutTime = 60000 // 1 Minute
+  timeOutTime = 180000 // 3 Minutes
   successCount = 0
   lifeCycleEvent = 'load'
   async execute({
