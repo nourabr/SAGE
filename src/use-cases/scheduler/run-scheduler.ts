@@ -3,7 +3,6 @@ import { Scheduler } from './scheduler'
 import { logError } from '@/utils/log-error'
 
 export async function runScheduler() {
-  const scheduler = new Scheduler()
   const posts = await prisma.post.findMany({
     where: {
       status: 'Ready',
@@ -15,6 +14,7 @@ export async function runScheduler() {
 
   for (const [index, post] of posts.entries()) {
     try {
+      const scheduler = new Scheduler()
       console.log(`\nScheduler queue: ${index + 1} of ${posts.length}`)
       await scheduler.execute(post)
     } catch (error: any) {

@@ -74,15 +74,15 @@ model Competitor {
   url  String
 
   // Scrapping variables
-  cardListUrl    String
-  postCardEl     String
-  postTitleEl    String
-  postContentEl  String
-  postImgEl      String
-  scrapingLimit  Int      @default(3)
-  unwantedTags   String[] @default([])
-  blogCategoryId Int      @default(0)
-  ifBeginWith    String   @default("")
+  cardListUrl        String
+  postCardEl         String
+  postTitleEl        String
+  postContentEl      String
+  postImgEl          String
+  scrapingLimit      Int      @default(3)
+  unwantedTags       String[] @default([])
+  blogCategoryId     Int      @default(0)
+  waitUntilEventName String   @default("")
 
   // Relations
   blog   Blog   @relation(fields: [blogId], references: [id])

@@ -20,7 +20,7 @@ export class Imager {
       .resize(512, 512)
       .toFile(localImgPath)
       .then((data) => {
-        console.log(`\nReady for DALL-E`)
+        console.log(`Ready for DALL-E`)
         fs.readFile(localImgPath, async (err, img) => {
           const form = new FormData()
           form.append('size', '1024x1024')

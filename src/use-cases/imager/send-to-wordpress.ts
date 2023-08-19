@@ -34,9 +34,9 @@ export async function sendToWordpress(
       console.log('\nError trying to write file to disk!')
     }
 
-    console.log('\nOpenAI image saved to tmp folder!')
+    console.log('OpenAI image saved to tmp folder!')
 
-    console.log('\nRequesting Wordpress...')
+    console.log('Requesting Wordpress...')
 
     axios
       .post(
@@ -58,7 +58,7 @@ export async function sendToWordpress(
         },
       )
       .then(async ({ data }) => {
-        console.log(`\nUploaded image ${data.id} to Wordpress!`)
+        console.log(`Uploaded image ${data.id} to Wordpress!`)
 
         // Upload id to db
         const isUpdated = await prisma.post.update({

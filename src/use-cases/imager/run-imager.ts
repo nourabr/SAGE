@@ -20,7 +20,7 @@ export async function runImager() {
       setTimeout(async () => {
         console.log(`\nImager queue: ${index + 1} of ${posts.length}`)
         await imager.execute(post)
-      }, index * 12000)
+      }, index * 20000)
     } catch (error: any) {
       logError(error, post)
       if (error.response) {

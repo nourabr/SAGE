@@ -9,14 +9,14 @@
   "scripts": {
     "dev:scrapper": "tsx src/cron/scrapper.ts",
     "dev:rewriter": "tsx src/cron/rewriter.ts",
-    "dev:scheduler": "tsx src/cron/scheduler.ts",
     "dev:imager": "tsx src/cron/imager.ts",
+    "dev:scheduler": "tsx src/cron/scheduler.ts",
     "dev": "tsx src/cron/run-sage.ts",
     "build": "tsup src --out-dir build",
     "scrapper": "node build/cron/scrapper.js",
     "rewriter": "node build/cron/rewriter.js",
-    "scheduler": "node build/cron/scheduler.js",
     "imager": "node build/cron/imager.js",
+    "scheduler": "node build/cron/scheduler.js",
     "prod": "node build/cron/run-sage.js",
     "dev:docker": "sudo docker compose up -d",
     "build-command": "npm i & npx prisma migrate dev & npm run build"

@@ -5,8 +5,9 @@ import { Competitor } from '@prisma/client'
 import puppeteer from 'puppeteer'
 
 export class Scrapper {
-  timeOutTime = 600000
+  timeOutTime = 60000 // 1 Minute
   successCount = 0
+  lifeCycleEvent = 'load'
   async execute({
     cardListUrl,
     postCardEl,
@@ -17,7 +18,14 @@ export class Scrapper {
     blogId,
     id,
     unwantedTags,
+    waitUntilEventName,
   }: Competitor) {
+    if (waitUntilEventName) {
+      this.lifeCycleEvent = waitUntilEventName
+    }
+
+    console.log(`Using event: ${this.lifeCycleEvent}`)
+
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     console.log('\nBrowser launched...')
@@ -49,7 +57,8 @@ export class Scrapper {
         break
       } else {
         await page.goto(post.url, {
-          // waitUntil: 'networkidle2',
+          // @ts-ignore
+          waitUntil: this.lifeCycleEvent,
           timeout: this.timeOutTime,
         })
         console.log(`\nNavigated to ${post.url}`)
@@ -107,14 +116,16 @@ export class Scrapper {
               .querySelector<HTMLElement>(postImgEl)
               ?.style.backgroundImage.slice(5, -2)
 
-            console.log(`Essa é nossa Imagem: ${image}`)
+            // If webp
+            if (!image) {
+              image =
+                document.querySelector<HTMLImageElement>(postImgEl)?.dataset.src
+            }
 
             // If image on img
             if (!image) {
               image = document.querySelector<HTMLImageElement>(postImgEl)?.src
             }
-
-            console.log(`Essa é nossa Imagem: ${image}`)
 
             return {
               title: title || '',

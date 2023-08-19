@@ -3,7 +3,6 @@ import { Rewriter } from './rewriter'
 import { logError } from '@/utils/log-error'
 
 export async function runRewriter() {
-  const rewriter = new Rewriter()
   const posts = await prisma.post.findMany({
     where: {
       status: 'Waiting',
@@ -15,6 +14,7 @@ export async function runRewriter() {
 
   for (const [index, post] of posts.entries()) {
     try {
+      const rewriter = new Rewriter()
       console.log(`\nRewriter queue: ${index + 1} of ${posts.length}`)
       await rewriter.execute(post)
     } catch (error: any) {

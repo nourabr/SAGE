@@ -12,11 +12,12 @@ export class Rewriter {
       gptModel = 'gpt-3.5-turbo-16k'
     }
 
+    console.log(`Using model: ${gptModel}`)
     console.log('Requesting OpenAI...')
     const reply = await openAI.createChatCompletion(
       {
         model: gptModel,
-        max_tokens: 1000,
+        max_tokens: gptModel === 'gpt-3.5-turbo' ? 2000 : 3000,
         temperature: 0.97,
         messages: [
           {
@@ -30,7 +31,7 @@ export class Rewriter {
         ],
       },
       {
-        timeout: 80000, // 1 minute
+        timeout: 80000, // 1:20 minutes
       },
     )
 
