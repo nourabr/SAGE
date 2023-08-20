@@ -7,7 +7,7 @@ export async function runScrapper() {
   let timeout = 15000
 
   if (env.NODE_ENV === 'production') {
-    timeout = 30000
+    timeout = 5000
   }
 
   const competitors = await prisma.competitor.findMany({
