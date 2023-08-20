@@ -5,7 +5,7 @@ import { Competitor } from '@prisma/client'
 import puppeteer from 'puppeteer'
 
 export class Scrapper {
-  timeOutTime = 240000 // 4 Minutes
+  timeOutTime = 600000 // 10 Minutes
   successCount = 0
   lifeCycleEvent = 'load'
   async execute({
@@ -25,14 +25,14 @@ export class Scrapper {
       this.lifeCycleEvent = waitUntilEventName
     }
 
-    console.log(`Using event: ${this.lifeCycleEvent}`)
+    console.log(`[ ${name}] Using event: ${this.lifeCycleEvent}`)
 
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    console.log('Browser launched...')
+    console.log(`[ ${name}] Browser launched...`)
 
     await page.goto(cardListUrl, { timeout: this.timeOutTime })
-    console.log(`Navigated to ${cardListUrl}`)
+    console.log(`[ ${name}] Navigated to ${cardListUrl}`)
 
     await page.setViewport({ width: 1366, height: 900 })
 
@@ -48,7 +48,7 @@ export class Scrapper {
       return postList
     }, postCardEl)
 
-    console.log('Posts urls collected...')
+    console.log(`[ ${name}] Posts urls collected...`)
 
     const posts = []
 
@@ -61,7 +61,7 @@ export class Scrapper {
           waitUntil: this.lifeCycleEvent,
           timeout: this.timeOutTime,
         })
-        console.log(`Navigated to ${post.url}`)
+        console.log(`[ ${name}] Navigated to ${post.url}`)
 
         const postData = await page.evaluate(
           (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
@@ -141,10 +141,10 @@ export class Scrapper {
         )
 
         if (!postData.title || !postData.content) {
-          logError('Title or Content not found')
+          logError(`[ ${name}] Title or Content not found`)
         } else {
           this.successCount++
-          console.log('Got data!')
+          console.log(`[ ${name}] Got data!`)
           posts.push(postData)
         }
       }
@@ -153,9 +153,9 @@ export class Scrapper {
     await browser.close()
 
     console.log(
-      `Scraping succeeded at ${this.successCount} of ${
+      `[ ${name}] Scraping succeeded at ${this.successCount} of ${
         postList.length <= scrapingLimit ? postList.length : scrapingLimit
-      } [${name}]`,
+      }`,
     )
 
     this.successCount = 0
@@ -168,9 +168,11 @@ export class Scrapper {
       })
 
       if (isDuplicated) {
-        logError(`Post already exists! reference: ${isDuplicated.refUrl}`)
+        logError(
+          `[ ${name}] Post already exists! reference: ${isDuplicated.refUrl}`,
+        )
         console.log(
-          `Added ${this.successCount} of ${
+          `[ ${name}] Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )
@@ -189,7 +191,7 @@ export class Scrapper {
         this.successCount++
 
         console.log(
-          `Added ${this.successCount} of ${
+          `[ ${name}] Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )

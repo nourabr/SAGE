@@ -23,7 +23,11 @@ export async function runScrapper() {
   for (const [index, competitor] of competitors.entries()) {
     try {
       setTimeout(async () => {
-        console.log(`\nScrapper queue: ${index + 1} of ${competitors.length}`)
+        console.log(
+          `\nScrapper queue: ${index + 1} of ${competitors.length} [ ${
+            competitor.name
+          }]`,
+        )
         const scrapper = new Scrapper()
         await scrapper.execute(competitor)
       }, index * timeout)
