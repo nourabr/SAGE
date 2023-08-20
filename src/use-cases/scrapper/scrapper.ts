@@ -19,6 +19,7 @@ export class Scrapper {
     id,
     unwantedTags,
     waitUntilEventName,
+    name,
   }: Competitor) {
     if (waitUntilEventName) {
       this.lifeCycleEvent = waitUntilEventName
@@ -28,13 +29,12 @@ export class Scrapper {
 
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    console.log('\nBrowser launched...')
+    console.log('Browser launched...')
 
     await page.goto(cardListUrl, { timeout: this.timeOutTime })
-    console.log(`\nNavigated to ${cardListUrl}`)
+    console.log(`Navigated to ${cardListUrl}`)
 
     await page.setViewport({ width: 1366, height: 900 })
-    console.log('\nViewport set to 1366x900...')
 
     const postList = await page.evaluate((postCardEl) => {
       const nodeList = document.querySelectorAll(postCardEl)
@@ -48,7 +48,7 @@ export class Scrapper {
       return postList
     }, postCardEl)
 
-    console.log('\nPosts urls collected...')
+    console.log('Posts urls collected...')
 
     const posts = []
 
@@ -61,7 +61,7 @@ export class Scrapper {
           waitUntil: this.lifeCycleEvent,
           timeout: this.timeOutTime,
         })
-        console.log(`\nNavigated to ${post.url}`)
+        console.log(`Navigated to ${post.url}`)
 
         const postData = await page.evaluate(
           (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
@@ -141,10 +141,10 @@ export class Scrapper {
         )
 
         if (!postData.title || !postData.content) {
-          logError('\nTitle or Content not found')
+          logError('Title or Content not found')
         } else {
           this.successCount++
-          console.log('\nGot data!')
+          console.log('Got data!')
           posts.push(postData)
         }
       }
@@ -153,9 +153,9 @@ export class Scrapper {
     await browser.close()
 
     console.log(
-      `\nScraping succeeded at ${this.successCount} of ${
+      `Scraping succeeded at ${this.successCount} of ${
         postList.length <= scrapingLimit ? postList.length : scrapingLimit
-      }`,
+      } [${name}]`,
     )
 
     this.successCount = 0
@@ -168,9 +168,9 @@ export class Scrapper {
       })
 
       if (isDuplicated) {
-        logError(`\nPost already exists! reference: ${isDuplicated.refUrl}`)
+        logError(`Post already exists! reference: ${isDuplicated.refUrl}`)
         console.log(
-          `\nAdded ${this.successCount} of ${
+          `Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )
@@ -189,7 +189,7 @@ export class Scrapper {
         this.successCount++
 
         console.log(
-          `\nAdded ${this.successCount} of ${
+          `Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )
