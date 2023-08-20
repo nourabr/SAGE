@@ -1,14 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { Scrapper } from './scrapper'
 import { logError } from '@/utils/log-error'
-import { env } from '@/env'
 
 export async function runScrapper() {
-  let timeout = 15000
-
-  if (env.NODE_ENV === 'production') {
-    timeout = 5000
-  }
+  const timeout = 15000
 
   const competitors = await prisma.competitor.findMany({
     where: {
