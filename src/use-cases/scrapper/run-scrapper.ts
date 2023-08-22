@@ -7,7 +7,7 @@ export async function runScrapper() {
 
   const competitors = await prisma.competitor.findMany({
     where: {
-      id: `4a8c949c-0071-4601-9876-86fc5c921b8a`, // Tele Síntese
+      // id: `4a8c949c-0071-4601-9876-86fc5c921b8a`, // Tele Síntese
     },
   })
 
