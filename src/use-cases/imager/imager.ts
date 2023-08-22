@@ -5,9 +5,24 @@ import fs from 'node:fs'
 import { env } from '@/env'
 import { sendToWordpress } from './send-to-wordpress'
 import { logError } from '@/utils/log-error'
+import { prisma } from '@/lib/prisma'
 
 export class Imager {
   async execute({ id, refImage, blogId, title }: Post) {
+    if (!refImage) {
+      const blog = await prisma.blog.findFirst({
+        where: {
+          id: blogId,
+        },
+      })
+
+      if (!blog) {
+        throw new Error('refImage and Blog not found!')
+      }
+
+      refImage = blog.defaultImage
+    }
+
     const getImageFromRef = await axios.get(refImage, {
       responseType: 'arraybuffer',
     })

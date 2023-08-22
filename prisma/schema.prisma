@@ -45,9 +45,10 @@ model Post {
 
 model Blog {
   // Optional
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  defaultImage String   @default("")
 
   // Required
   name String
@@ -83,6 +84,7 @@ model Competitor {
   unwantedTags       String[] @default([])
   blogCategoryId     Int      @default(0)
   waitUntilEventName String   @default("")
+  wordsToRemove      String[] @default([])
 
   // Relations
   blog   Blog   @relation(fields: [blogId], references: [id])

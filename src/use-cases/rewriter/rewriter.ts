@@ -31,7 +31,7 @@ export class Rewriter {
         ],
       },
       {
-        timeout: 80000, // 1:20 minutes
+        timeout: 120000, // 2 minutes
       },
     )
 

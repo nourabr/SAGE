@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { logError } from '@/utils/log-error'
+import { removeFromText } from '@/utils/remove-from-text'
 import { Competitor } from '@prisma/client'
 
 import puppeteer from 'puppeteer'
@@ -20,19 +21,20 @@ export class Scrapper {
     unwantedTags,
     waitUntilEventName,
     name,
+    wordsToRemove,
   }: Competitor) {
     if (waitUntilEventName) {
       this.lifeCycleEvent = waitUntilEventName
     }
 
-    console.log(`[ ${name}] Using event: ${this.lifeCycleEvent}`)
+    console.log(`[ ${name} ] Using event: ${this.lifeCycleEvent}`)
 
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    console.log(`[ ${name}] Browser launched...`)
+    console.log(`[ ${name} ] Browser launched...`)
 
     await page.goto(cardListUrl, { timeout: this.timeOutTime })
-    console.log(`[ ${name}] Navigated to ${cardListUrl}`)
+    console.log(`[ ${name} ] Navigated to ${cardListUrl}`)
 
     await page.setViewport({ width: 1366, height: 900 })
 
@@ -48,7 +50,7 @@ export class Scrapper {
       return postList
     }, postCardEl)
 
-    console.log(`[ ${name}] Posts urls collected...`)
+    console.log(`[ ${name} ] Posts urls collected...`)
 
     const posts = []
 
@@ -61,7 +63,7 @@ export class Scrapper {
           waitUntil: this.lifeCycleEvent,
           timeout: this.timeOutTime,
         })
-        console.log(`[ ${name}] Navigated to ${post.url}`)
+        console.log(`[ ${name} ] Navigated to ${post.url}`)
 
         const postData = await page.evaluate(
           (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
@@ -115,16 +117,32 @@ export class Scrapper {
             image = document
               .querySelector<HTMLElement>(postImgEl)
               ?.style.backgroundImage.slice(5, -2)
+            console.log(`This is a image from CSS: ${image}`)
 
             // If webp
             if (!image) {
               image =
                 document.querySelector<HTMLImageElement>(postImgEl)?.dataset.src
+              console.log(`This is a image from Webp format: ${image}`)
             }
 
             // If image on img
             if (!image) {
               image = document.querySelector<HTMLImageElement>(postImgEl)?.src
+              console.log(`This is a image from <img>: ${image}`)
+            }
+
+            // If <a> link
+            if (!image) {
+              image =
+                document.querySelector<HTMLAnchorElement>('figure > a')?.href
+              console.log(`This is a image from <a>: ${image}`)
+            }
+
+            // If <p><img>
+            if (!image) {
+              image = document.querySelector<HTMLImageElement>('p img')?.src
+              console.log(`This is a image from <p><img>: ${image}`)
             }
 
             return {
@@ -141,10 +159,10 @@ export class Scrapper {
         )
 
         if (!postData.title || !postData.content) {
-          logError(`[ ${name}] Title or Content not found`)
+          logError(`[ ${name} ] Title or Content not found`)
         } else {
           this.successCount++
-          console.log(`[ ${name}] Got data!`)
+          console.log(`[ ${name} ] Got data!`)
           posts.push(postData)
         }
       }
@@ -153,7 +171,7 @@ export class Scrapper {
     await browser.close()
 
     console.log(
-      `[ ${name}] Scraping succeeded at ${this.successCount} of ${
+      `[ ${name} ] Scraping succeeded at ${this.successCount} of ${
         postList.length <= scrapingLimit ? postList.length : scrapingLimit
       }`,
     )
@@ -169,10 +187,10 @@ export class Scrapper {
 
       if (isDuplicated) {
         logError(
-          `[ ${name}] Post already exists! reference: ${isDuplicated.refUrl}`,
+          `[ ${name} ] Post already exists! reference: ${isDuplicated.refUrl}`,
         )
         console.log(
-          `[ ${name}] Added ${this.successCount} of ${
+          `[ ${name} ] Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )
@@ -180,7 +198,9 @@ export class Scrapper {
         await prisma.post.create({
           data: {
             refTitle: post.title,
-            refContent: post.content,
+            refContent: wordsToRemove
+              ? removeFromText(post.content, wordsToRemove)
+              : post.content,
             refUrl: post.referencePostUrl,
             refImage: post.img,
             blogId,
@@ -191,7 +211,7 @@ export class Scrapper {
         this.successCount++
 
         console.log(
-          `[ ${name}] Added ${this.successCount} of ${
+          `[ ${name} ] Added ${this.successCount} of ${
             postList.length <= scrapingLimit ? postList.length : scrapingLimit
           } posts to database`,
         )
