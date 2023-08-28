@@ -12,7 +12,7 @@ datasource db {
 
 model Post {
   // Optional
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   status    String   @default("Waiting")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,7 +38,7 @@ model Post {
   blogId       String
   competitor   Competitor @relation(fields: [competitorId], references: [id])
   competitorId String
-  Log          Log[]
+  // Log          Log[]
 
   @@map("posts")
 }
@@ -90,19 +90,19 @@ model Competitor {
   blog   Blog   @relation(fields: [blogId], references: [id])
   blogId String
   Post   Post[]
-  Log    Log[]
+  // Log    Log[]
 
   @@map("competitors")
 }
 
-model Log {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  message   String
+// model Log {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   message   String
 
-  // Relations
-  Post         Post       @relation(fields: [postId], references: [id])
-  postId       Int        @default(0)
-  Competitor   Competitor @relation(fields: [competitorId], references: [id])
-  competitorId String     @default("")
-}
+//   // Relations
+//   Post         Post       @relation(fields: [postId], references: [id])
+//   postId       Int        @default(0)
+//   Competitor   Competitor @relation(fields: [competitorId], references: [id])
+//   competitorId String     @default("")
+// }
