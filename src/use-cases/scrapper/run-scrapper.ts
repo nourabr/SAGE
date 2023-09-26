@@ -7,7 +7,8 @@ export async function runScrapper() {
 
   const competitors = await prisma.competitor.findMany({
     where: {
-      // id: `5debb05b-f142-42ea-bc8a-a7793eca6c09`, // Cobasi (Jardinagem)
+      // id: `3b481201-c54e-4529-b345-bcbbb675ccf0`, // Petlove (Bem estar)
+      // id: `af96d034-c20d-4a40-8761-0194ecc1914d`, // Tecnoblog
     },
   })
 
@@ -16,6 +17,14 @@ export async function runScrapper() {
   }
 
   for (const [index, competitor] of competitors.entries()) {
+    if (
+      // Remoção temporária do Petlove e Tecnoblog
+      competitor.id === 'af96d034-c20d-4a40-8761-0194ecc1914d' ||
+      competitor.id === '3b481201-c54e-4529-b345-bcbbb675ccf0'
+    ) {
+      continue
+    }
+
     try {
       setTimeout(async () => {
         console.log(
