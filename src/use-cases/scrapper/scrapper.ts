@@ -29,7 +29,7 @@ export class Scrapper {
 
     console.log(`[ ${name} ] Using event: ${this.lifeCycleEvent}`)
 
-    const browser = await puppeteer.launch({ headless: 'new' })
+    const browser = await puppeteer.launch()
     const page = await browser.newPage()
     console.log(`[ ${name} ] Browser launched...`)
 
