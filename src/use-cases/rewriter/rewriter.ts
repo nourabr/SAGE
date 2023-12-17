@@ -8,7 +8,7 @@ export class Rewriter {
   async execute({ id, refTitle, refContent }: Post) {
     let gptModel = 'gpt-3.5-turbo'
 
-    if (refContent.length > 5000) {
+    if (refContent.length > 4200) {
       gptModel = 'gpt-3.5-turbo-16k'
     }
 
