@@ -19,9 +19,9 @@ export async function runScrapper() {
   for (const [index, competitor] of competitors.entries()) {
     if (
       // Remoção temporária do Petlove, Tecnoblog e Supervarejo
-      competitor.id === 'af96d034-c20d-4a40-8761-0194ecc1914d' ||
-      competitor.id === '3b481201-c54e-4529-b345-bcbbb675ccf0' ||
-      competitor.id === 'e15073ec-4207-4863-a1a5-5d9b4cb32d21'
+      // competitor.id === 'af96d034-c20d-4a40-8761-0194ecc1914d' ||
+      // competitor.id === '3b481201-c54e-4529-b345-bcbbb675ccf0' ||
+      competitor.id === 'e15073ec-4207-4863-a1a5-5d9b4cb32d21' // Supervarejo
     ) {
       continue
     }
