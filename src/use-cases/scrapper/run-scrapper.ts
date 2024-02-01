@@ -38,7 +38,9 @@ export async function runScrapper() {
         console.log(error.message)
       }
       console.log(
-        `\n -------- Skipping ${competitor.name} due to error...--------\n`,
+        `
+        -------- Skipping ${competitor.name} due to error...--------
+        `,
       )
       continue
     }
