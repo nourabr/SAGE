@@ -8,7 +8,7 @@ import fs from 'node:fs'
 export async function sendToWordpress(
   imageURL: string,
   blogId: string,
-  postId: number,
+  postId: string,
   title: string,
 ) {
   //

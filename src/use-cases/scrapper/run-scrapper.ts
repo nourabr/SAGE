@@ -3,8 +3,6 @@ import { Scrapper } from './scrapper'
 import { logError } from '@/utils/log-error'
 
 export async function runScrapper() {
-  const timeout = 15000
-
   const competitors = await prisma.competitor.findMany({
     where: {
       // id: `3b481201-c54e-4529-b345-bcbbb675ccf0`, // Petlove (Bem estar)
@@ -17,25 +15,23 @@ export async function runScrapper() {
   }
 
   for (const [index, competitor] of competitors.entries()) {
-    if (
-      // Remoção temporária do Petlove, Tecnoblog e Supervarejo
-      // competitor.id === 'af96d034-c20d-4a40-8761-0194ecc1914d' ||
-      // competitor.id === '3b481201-c54e-4529-b345-bcbbb675ccf0' ||
-      competitor.id === 'e15073ec-4207-4863-a1a5-5d9b4cb32d21' // Supervarejo
-    ) {
-      continue
-    }
+    // if (
+    //   // Remoção temporária do Petlove, Tecnoblog e Supervarejo
+    //   // competitor.id === 'af96d034-c20d-4a40-8761-0194ecc1914d' ||
+    //   // competitor.id === '3b481201-c54e-4529-b345-bcbbb675ccf0' ||
+    //   // competitor.id === 'e15073ec-4207-4863-a1a5-5d9b4cb32d21' // Supervarejo
+    // ) {
+    //   continue
+    // }
 
     try {
-      setTimeout(async () => {
-        console.log(
-          `\nScrapper queue: ${index + 1} of ${competitors.length} [ ${
-            competitor.name
-          }]`,
-        )
-        const scrapper = new Scrapper()
-        await scrapper.execute(competitor)
-      }, index * timeout)
+      console.log(
+        `\nScrapper queue: ${index + 1} of ${competitors.length} [ ${
+          competitor.name
+        }]`,
+      )
+      const scrapper = new Scrapper()
+      await scrapper.execute(competitor)
     } catch (error: any) {
       logError(error, undefined, competitor)
       if (error.response) {
@@ -44,8 +40,10 @@ export async function runScrapper() {
       } else {
         console.log(error.message)
       }
+      console.log(
+        `\n -------- Skipping ${competitor.name} due to error...--------\n`,
+      )
+      continue
     }
   }
 }
-
-// runScrapper()

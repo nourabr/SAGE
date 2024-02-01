@@ -29,8 +29,8 @@ export async function runImager() {
       } else {
         console.log(error.message)
       }
+      console.log(`\n -------- Skipping ${post.id} due to error...--------\n`)
+      continue
     }
   }
 }
-
-// runImager()
