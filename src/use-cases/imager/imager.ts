@@ -20,8 +20,6 @@ export class Imager {
         if (!blog) {
           throw new Error('refImage and Blog not found!')
         }
-
-        refImage = blog.defaultImage
       }
 
       const getImageFromRef = await axios.get(refImage, {
@@ -67,16 +65,23 @@ export class Imager {
           })
         })
     } catch (error) {
+      const blog = await prisma.blog.findFirst({
+        where: {
+          id: blogId,
+        },
+      })
+
       await prisma.post.update({
         where: { id },
         data: {
-          status: `Imager ${error}`,
+          status: 'Ready',
+          featuredMedia: blog?.defaultImage,
         },
       })
 
       logError(`
-      ${error}
-      The issue ocurred on post: ${id}`)
+      ----- Using default image on post: ${id} -----
+      due to ${error}`)
     }
   }
 }

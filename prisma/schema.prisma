@@ -48,7 +48,7 @@ model Blog {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  defaultImage String   @default("")
+  defaultImage Int      @default(25)
 
   // Required
   name String
