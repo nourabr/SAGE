@@ -26,6 +26,7 @@ export class Imager {
         responseType: 'arraybuffer',
       })
 
+      console.log(`Image ID: ${id}`)
       console.log(`\nPreparing image...`)
       const localImgPath = `./img/${id}.png`
 
