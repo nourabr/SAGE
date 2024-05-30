@@ -29,7 +29,7 @@ export class Scrapper {
 
     console.log(`[ ${name} ] Using event: ${this.lifeCycleEvent}`)
 
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({ headless: 'new' })
     const page = await browser.newPage()
     console.log(`[ ${name} ] Browser launched...`)
 
@@ -50,7 +50,7 @@ export class Scrapper {
       return postList
     }, postCardEl)
 
-    console.log(`[ ${name} ] Posts urls collected...`)
+    console.log(`[ ${name} ] Posts urls collected?...`)
 
     const posts = []
 
@@ -159,7 +159,9 @@ export class Scrapper {
         )
 
         if (!postData.title || !postData.content) {
-          logError(`[ ${name} ] Title or Content not found`)
+          logError(`[ ${name} ] Title or Content not found
+          Title: ${postData.title},
+          Content: ${postData.content} `)
         } else {
           this.successCount++
           console.log(`[ ${name} ] Got data!`)
@@ -168,6 +170,7 @@ export class Scrapper {
       }
     }
 
+    // [DEBUG] Comment it with Headless:false
     await browser.close()
 
     console.log(

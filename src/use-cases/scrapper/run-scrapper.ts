@@ -5,8 +5,8 @@ import { logError } from '@/utils/log-error'
 export async function runScrapper() {
   const competitors = await prisma.competitor.findMany({
     where: {
-      // id: `3b481201-c54e-4529-b345-bcbbb675ccf0`, // Petlove (Bem estar)
-      // id: `af96d034-c20d-4a40-8761-0194ecc1914d`, // Tecnoblog
+      // [DEBUG] Test specific competitor
+      // id: `d3775efb-233c-4fe4-ba4a-fb51e36407fb`, // Passagens Promo (Dicas de Viagem)
     },
   })
 
@@ -15,6 +15,7 @@ export async function runScrapper() {
   }
 
   for (const [index, competitor] of competitors.entries()) {
+    // [DEBUG] Skip one or more competitors
     // if (
     //   // competitor.id === 'e15073ec-4207-4863-a1a5-5d9b4cb32d21' // Supervarejo
     // ) {
