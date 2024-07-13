@@ -10,7 +10,7 @@ export class Rewriter {
 
     // default: 4000
     if (refContent.length > 6000) {
-      gptModel = 'gpt-3.5-turbo-16k'
+      gptModel = 'gpt-3.5-turbo-0125' // In theory both 3.5-turbo or 3.5-turbo-0125 are the same, both have 16k context and return a max of 4096 output tokens at a cheap cost.
     }
 
     console.log(`Using model: ${gptModel}`)
