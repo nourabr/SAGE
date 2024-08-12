@@ -6,7 +6,7 @@ export async function runScrapper() {
   const competitors = await prisma.competitor.findMany({
     where: {
       // [DEBUG] Test specific competitor
-      // id: `d3775efb-233c-4fe4-ba4a-fb51e36407fb`, // Passagens Promo (Dicas de Viagem)
+      id: `25424136-e220-4016-bfa9-6f1046001e8e`, // Seu Dinheiro (Finanças Pessoais)
     },
   })
 

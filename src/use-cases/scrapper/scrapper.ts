@@ -126,6 +126,14 @@ export class Scrapper {
               console.log(`This is a image from Webp format: ${image}`)
             }
 
+            // If Lazyloaded
+            if (!image) {
+              image =
+                document.querySelector<HTMLImageElement>(postImgEl)?.dataset
+                  .lazySrc
+              console.log(`This is a image from Lazyloading format: ${image}`)
+            }
+
             // If image on img
             if (!image) {
               image = document.querySelector<HTMLImageElement>(postImgEl)?.src
