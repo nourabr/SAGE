@@ -34,7 +34,7 @@ export class Scrapper {
     console.log(`[ ${name} ] Browser launched...`)
 
     await page.goto(cardListUrl, { timeout: this.timeOutTime })
-    console.log(`[ ${name} ] Navigated to ${cardListUrl}`)
+    console.log(`[ ${name} ] Colecting posts urls at: ${cardListUrl}`)
 
     await page.setViewport({ width: 1366, height: 900 })
 
@@ -50,7 +50,7 @@ export class Scrapper {
       return postList
     }, postCardEl)
 
-    console.log(`[ ${name} ] Posts urls collected?...`)
+    console.log(`[ ${name} ] Scraping colected urls...`)
 
     const posts = []
 
@@ -63,7 +63,7 @@ export class Scrapper {
           waitUntil: this.lifeCycleEvent,
           timeout: this.timeOutTime,
         })
-        console.log(`[ ${name} ] Navigated to ${post.url}`)
+        console.log(`[ ${name} ] Navigating to Post: ${post.url}`)
 
         const postData = await page.evaluate(
           (postTitleEl, postContentEl, postImgEl, unwantedTags) => {
@@ -172,7 +172,7 @@ export class Scrapper {
           Content: ${postData.content} `)
         } else {
           this.successCount++
-          console.log(`[ ${name} ] Got data!`)
+          console.log(`[ ${name} ] Done!`)
           posts.push(postData)
         }
       }
@@ -186,6 +186,8 @@ export class Scrapper {
         postList.length <= scrapingLimit ? postList.length : scrapingLimit
       }`,
     )
+
+    console.log(`[ ${name} ] Updating Database...`)
 
     this.successCount = 0
 
