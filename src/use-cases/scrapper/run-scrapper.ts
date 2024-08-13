@@ -6,7 +6,7 @@ export async function runScrapper() {
   const competitors = await prisma.competitor.findMany({
     where: {
       // [DEBUG] Test specific competitor
-      id: `b1ec33a9-54ae-4f37-a601-8b6532e68b2a`, // Perito Animal (Saúde)
+      // id: `e4dfe2e0-38f9-43fb-be66-9f482e939f57`, // Portal do Franchising
     },
   })
 
