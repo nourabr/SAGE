@@ -4,7 +4,7 @@
   "description": "O Projeto SAGE cria novos blog posts com base nos posts dos concorrentes e os posta automaticamente em um outro blog.",
   "main": "index.js",
   "engines": {
-    "node": "18.17.1"
+    "node": "18.17.0"
   },
   "scripts": {
     "dev:scrapper": "tsx src/cron/scrapper.ts",

@@ -9,19 +9,19 @@ import { prisma } from '@/lib/prisma'
 
 export class Imager {
   async execute({ id, refImage, blogId, title, status }: Post) {
-    try {
-      if (!refImage) {
-        const blog = await prisma.blog.findFirst({
-          where: {
-            id: blogId,
-          },
-        })
+    if (!refImage) {
+      const blog = await prisma.blog.findFirst({
+        where: {
+          id: blogId,
+        },
+      })
 
-        if (!blog) {
-          throw new Error('refImage and Blog not found!')
-        }
+      if (!blog) {
+        throw new Error('refImage and Blog not found!')
       }
+    }
 
+    try {
       const getImageFromRef = await axios.get(refImage, {
         responseType: 'arraybuffer',
       })
