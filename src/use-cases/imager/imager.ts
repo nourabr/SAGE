@@ -22,6 +22,11 @@ export class Imager {
     }
 
     try {
+      if (refImage.match(/\.(jpeg|jpg|gif|png|svg|webp)/g) == null) {
+        throw new Error(`Image format not valid!
+          Image url: ${refImage}`)
+      }
+
       const getImageFromRef = await axios.get(refImage, {
         responseType: 'arraybuffer',
       })
